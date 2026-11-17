@@ -1,0 +1,133 @@
+/* ============================================================
+   GRIMOIRE — Sistema de diseño · DARK FANTASY
+   Paleta extraída del sello: rosa de sangre sobre metal y obsidiana.
+   Rojos profundos, negros cálidos, un filo de plata fría. Con clase.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  /* --- Negros y metal (más oscuro, casi obsidiana pura) --- */
+  --obsidian: #070405;       /* fondo base: negro profundo */
+  --obsidian-deep: #030102;  /* el vacío absoluto */
+  --iron: #120c0d;           /* superficies elevadas: metal muy oscuro */
+  --iron-raised: #160e10;    /* paneles */
+  --iron-line: #301c20;      /* bordes: óxido tenue */
+  --steel: #4a352f;          /* metal medio, para detalles fríos */
+
+  /* --- Rojos (de la rosa) --- */
+  --blood: #a8313f;          /* rojo sangre: acento principal */
+  --blood-bright: #cc4450;   /* rojo encendido en hover */
+  --blood-deep: #6b1d28;     /* rojo vino: acentos secundarios, espinas */
+  --blood-glow: rgba(168, 49, 63, 0.4);
+  --rose-glow: rgba(204, 68, 80, 0.5);
+
+  /* --- Texto --- */
+  --bone: #e6dcd0;           /* hueso/pergamino: texto principal */
+  --bone-dim: #8a796f;       /* texto secundario: ceniza */
+  --silver: #b8a99c;         /* plata fría para acentos de texto */
+
+  /* --- Estados --- */
+  --ember: #cc4450;          /* rojo para "jugando" */
+  --ash: #7a6a5e;            /* gris para backlog */
+  --moss: #6f7d50;           /* verde apagado para completado */
+  --rust: #8a4e30;           /* naranja óxido para abandonado */
+
+  /* --- Tipografía --- */
+  --display: "Cinzel", "Cormorant Garamond", Georgia, serif;
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --body: "Spectral", Georgia, serif;
+  --mono: "IBM Plex Mono", monospace;
+
+  --radius: 2px;
+  --shadow-card: 0 14px 40px rgba(0, 0, 0, 0.85);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body {
+  background-color: var(--obsidian);
+  color: var(--bone);
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+  position: relative;
+}
+
+/* Espinas de fondo: las zarzas del sello enredadas tras el contenido.
+   El color/intensidad lo controla el tema activo vía variables. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("../assets/thorns.svg");
+  background-size: cover;
+  background-position: center;
+  opacity: var(--thorn-opacity, 0.4);
+  filter: var(--thorn-filter, none);
+  animation: thornbreath 18s ease-in-out infinite;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+@keyframes thornbreath {
+  0%, 100% { opacity: calc(var(--thorn-opacity, 0.4) * 0.8); }
+  50% { opacity: var(--thorn-opacity, 0.4); }
+}
+
+/* Velo de oscuridad: brasa muy tenue abajo (color del tema) + vignette. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 115%, var(--aura-color, rgba(168, 49, 63, 0.08)), transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 45%, transparent 40%, var(--obsidian-deep) 100%);
+  transition: background 0.6s ease;
+}
+
+#root { position: relative; z-index: 1; }
+
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--iron-line);
+  border-radius: 6px;
+  border: 2px solid var(--obsidian);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--blood); }
+
+button { font-family: var(--body); cursor: pointer; border: none; background: none; color: inherit; }
+
+input, textarea, select {
+  font-family: var(--body);
+  background: var(--obsidian-deep);
+  border: 1px solid var(--iron-line);
+  color: var(--bone);
+  border-radius: var(--radius);
+  padding: 9px 11px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--blood);
+  box-shadow: 0 0 0 1px var(--blood-glow), 0 0 12px var(--blood-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Solo calmamos las animaciones de fondo continuas (bruma, latido),
+     no las de interacción puntual (apertura de paneles, rosa), que son
+     breves y forman parte del feedback de la acción. */
+  body::before, body::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

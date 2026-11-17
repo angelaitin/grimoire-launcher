@@ -1,0 +1,9 @@
+# Dependencias
+node_modules/
+# Builds
+dist/
+src-tauri/target/
+src-tauri/gen/
+# SO
+.DS_Store
+Thumbs.db
